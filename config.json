@@ -1,0 +1,9 @@
+{
+    "server":{
+        "name":"node-fullstack",
+        "port":8080
+    },
+    "postgres":{
+        
+    }
+}

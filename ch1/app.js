@@ -50,7 +50,9 @@ function callMessage(){
 const server = http.createServer((req, res)=>{
     const buf = fileSystem.readFileSync("log.txt", 'utf8')
     const data = buf.split("\n")
-
+    if (req.path == "/timestamp"){
+        // . . .
+    }
     // get last data
     let dataRes = "timestamp 1"
     if (data.length > 1){

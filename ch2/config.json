@@ -1,0 +1,12 @@
+{
+    "server":{
+        "name":"node-fullstack",
+        "port":3000
+    },
+    "static":{
+        "path":"./ch2/public"
+    },
+    "storage":{
+        "user":"./ch2/storage/users.json"
+    }
+}

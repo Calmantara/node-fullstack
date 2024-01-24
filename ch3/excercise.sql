@@ -237,3 +237,46 @@ values (
     );
 
 select * from mahasiswa_grade mg;
+
+-- CHALLENGE
+-- menampilkan nilai tertinggi dari suatu mata kuliah
+-- dan menampilkan data mahasiswa
+
+select rmmk.mata_kuliah_id as mk_id, max(mg.grade) as max_grade
+from
+    r_mahasiswa_mata_kuliah rmmk
+    join mahasiswa_grade mg on mg.mh_mk_id = rmmk.id
+group by
+    rmmk.mata_kuliah_id;
+
+explain
+analyze
+with
+    mg_cte as (
+        select rmmk.mata_kuliah_id as mk_id, max(mg.grade) as max_grade
+        from
+            r_mahasiswa_mata_kuliah rmmk
+            join mahasiswa_grade mg on mg.mh_mk_id = rmmk.id
+        group by
+            rmmk.mata_kuliah_id
+    )
+select m.nama, mk.nama, mg.grade
+from
+    mahasiswa_grade mg
+    join r_mahasiswa_mata_kuliah rmmk on rmmk.id = mg.mh_mk_id
+    join mahasiswa m on m.id = rmmk.mahasiswa_id
+    join mata_kuliah mk on mk.id = rmmk.mata_kuliah_id
+    join mg_cte mc on mc.max_grade = mg.grade
+    and mc.mk_id = mk.id;
+
+-- memasukkan data dari satu table ke table lain
+select * from mahasiswa m where m.dob < '1990-01-01';
+
+insert into
+    dosen (nama, dob, jurusan_id, alamat)
+select nama, dob, jurusan_id, alamat
+from mahasiswa m
+where
+    m.dob < '1990-01-01';
+
+select * from dosen d;

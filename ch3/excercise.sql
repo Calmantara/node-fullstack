@@ -201,3 +201,39 @@ values (
             generate_series(1, 1000000), 3
         ) + 1
     );
+
+select id from mahasiswa m order by id desc;
+
+-- memasuk r mh mk
+insert into
+    r_mahasiswa_mata_kuliah (mahasiswa_id, mata_kuliah_id)
+values (
+        generate_series(4000, 1004000), mod(
+            generate_series(1, 1000000), 5
+        ) + 1
+    );
+
+-- memasuk r mh mk
+insert into
+    r_mahasiswa_mata_kuliah (mahasiswa_id, mata_kuliah_id)
+values (
+        generate_series(4000, 1004000), mod(
+            generate_series(1, 1000000), 5
+        ) + 1
+    );
+
+select id from r_mahasiswa_mata_kuliah rmmk order by id desc;
+
+-- memasukkan grade
+insert into
+    mahasiswa_grade (mh_mk_id, "type", grade)
+values (
+        generate_series(1, 1000000), (
+            SELECT myletter
+            FROM unnest(enum_range(NULL::grade_type)) myletter
+            ORDER BY random()
+            LIMIT 1
+        ), random() * 10
+    );
+
+select * from mahasiswa_grade mg;

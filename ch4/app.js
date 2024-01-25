@@ -1,6 +1,7 @@
 const program = require("commander")
-const graphql = require("./graphql")
-const sequelize = require("./sequelize")
+const graphql = require("./server/graphql")
+const sequelize = require("./server/sequelize")
+const http = require("./server/http")
 
 
 program.
@@ -11,7 +12,7 @@ program.
     command("http").
     description("run http server").
     action(() => {
-        // http.serveBackend()
+        http.serveBackend()
     })
 program.
     command("graphql").

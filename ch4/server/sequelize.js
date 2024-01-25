@@ -21,17 +21,24 @@ async function serve() {
 
     // create jane
     (async () => {
-        await sequelize.sync();
+        const t = await sequelize.transaction();
         try {
-            const jane = await User.create({
-                username: 'janedoe',
-                dob: new Date(1980, 6, 20)
-            });
+            const jane = await createUser(t, "jane2", new Date(1980, 6, 20));
+            const doe = await createUser(t, "doe2", new Date(1980, 6, 20));
+            await t.commit()
         } catch (err) {
             console.log(`error in database execution ${err}`)
+            await t.rollback()
         }
     })();
     // POST /api/v1/users
+}
+
+async function createUser(t, username, dob) {
+    return await User.create({
+        username: username,
+        dob: dob,
+    }, { transaction: t })
 }
 
 module.exports = { serve }

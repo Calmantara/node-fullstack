@@ -1,7 +1,7 @@
 const express = require("express")
 const { graphqlHTTP } = require("express-graphql")
 const { buildSchema } = require("graphql")
-const UserRepository = require("./src/repository/user")
+const UserRepository = require("../src/repository/user")
 
 function serve() {
     const { userRepo } = prepare()

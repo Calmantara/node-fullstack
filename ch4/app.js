@@ -1,7 +1,7 @@
 const program = require("commander")
-const graphql = require("./server/graphql")
-const sequelize = require("./server/sequelize")
-const http = require("./server/http")
+const graphql = require("./cmd/graphql")
+const sequelize = require("./cmd/sequelize")
+const http = require("./cmd/http")
 
 
 program.

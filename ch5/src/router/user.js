@@ -1,6 +1,7 @@
 class UserRouter {
-    constructor(app, userController) {
+    constructor(app, middleware, userController) {
         this.userController = userController
+        this.middleware = middleware
         this.app = app
     }
 
@@ -8,12 +9,20 @@ class UserRouter {
         // mount all
         const v1 = "/api/v1"
 
+        // User Session
+        this.app.post(`${v1}/users/login`, async (req, res) => {
+            this.userController.userLogin(req, res)
+        })
+
+        this.app.use((req, res, next) => {
+            this.middleware.authenticate(req, res, next)
+        })
+
         // [GET, POST] /api/v1/users 
         const users = this.app.route(`${v1}/users`)
         users.get(async (req, res) => {
             this.userController.getUsers(req, res)
         })
-
         users.post(async (req, res) => {
             this.userController.createUser(req, res)
         })
@@ -27,10 +36,6 @@ class UserRouter {
             this.userController.updateUserDob(req, res)
         })
 
-        // User Session
-        this.app.post(`${v1}/users/login`, async (req, res) => {
-            this.userController.userLogin(req, res)
-        })
     }
 }
 

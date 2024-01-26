@@ -6,6 +6,7 @@ const { UserService } = require("../src/service/user")
 const { connectDb } = require("../src/config/db")
 const { UserController } = require("../src/controller/user");
 const { Crypto } = require("../src/service/crypto");
+const { Middleware } = require("../src/controller/middleware");
 
 
 async function serveBackend() {
@@ -24,7 +25,7 @@ async function serveBackend() {
 
 async function prepare() {
   // make db connection
-  const { postgres } = config
+  const { postgres, session } = config
   const dbMaster = await connectDb(postgres.master)
   // make express app
   const app = express();
@@ -33,10 +34,16 @@ async function prepare() {
 
   // class definitions
   const userRepo = new UserPostgres(dbMaster)
-  const cryptoService = new Crypto()
+  const cryptoService = new Crypto(session)
   const userService = new UserService(userRepo, cryptoService)
   const userController = new UserController(userService)
-  const userRouter = new UserRouter(app, userController)
+  // middlware & router
+  const middleware = new Middleware(cryptoService, userService)
+  const userRouter = new UserRouter(app, middleware, userController)
+
+  // app.get("", (req, res) => {
+
+  // })
 
   // mount all 
   userRouter.mountV1()

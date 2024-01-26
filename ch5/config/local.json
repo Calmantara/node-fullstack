@@ -11,5 +11,12 @@
       "password": "mysecretpassword",
       "database": "cinema"
     }
+  },
+  "session": {
+    "secret": "thisisverysupersecretkey",
+    "audience": ["node-fullstack.com"],
+    "issuer": ["node-fullstack.com"],
+    "accessExpires": 1,
+    "refreshExpires": 2
   }
 }

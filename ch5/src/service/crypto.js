@@ -4,6 +4,9 @@ const { Claims, Token } = require("../model/token")
 const moment = require("moment")
 
 class Crypto {
+    constructor(sessionConfig) {
+        this.sessionConfig = sessionConfig
+    }
     async generatePassword(password) {
         try {
             const salt = await bcrypt.genSalt(10)
@@ -26,26 +29,26 @@ class Crypto {
         // membuat claim
         // sub, iss, iat, exp, aud, data
         const now = new Date()
-        const exp = (Date.now() / 1000) + (60 * 60)
+        const exp = (Date.now() / 1000) + (60 * 60 * this.sessionConfig.accessExpires)
         const claims = new Claims(
             userData.id,
-            ["node-fullstack.com"],
+            this.sessionConfig.issuer,
             now,
             exp,
-            ["node-fullstack.com"],
+            this.sessionConfig.audience,
             {
                 "username": userData.username,
                 "dob": userData.dob
             }
         )
 
-        const expRefresh = (Date.now() / 1000) + (2 * 60 * 60)
+        const expRefresh = (Date.now() / 1000) + (60 * 60 * this.sessionConfig.refreshExpires)
         const refreshClaims = new Claims(
             userData.id,
-            ["node-fullstack.com"],
+            this.sessionConfig.issuer,
             now,
             expRefresh,
-            ["node-fullstack.com"],
+            this.sessionConfig.audience,
             {
                 "username": userData.username,
                 "dob": userData.dob
@@ -53,12 +56,26 @@ class Crypto {
         )
 
         // membuat jwt accessToken dan refreshToken
-        const accessToken = jwt.sign(JSON.stringify(claims), "thisissupersecretkey")
-        const refreshToken = jwt.sign(JSON.stringify(refreshClaims), "thisissupersecretkey")
+        const accessToken = jwt.sign(JSON.stringify(claims), this.sessionConfig.secret)
+        const refreshToken = jwt.sign(JSON.stringify(refreshClaims), this.sessionConfig.secret)
 
         // generate token model
         const tokens = new Token(accessToken, refreshToken)
         return tokens
+    }
+
+    async verifyUserToken(token) {
+        // const claimX = jwt.decode(token)
+        const claim = jwt.verify(token, this.sessionConfig.secret)
+        // expire
+        const now = Date.now()
+        if ((claim.exp * 1000) < now) {
+            throw new Error("expired token")
+        }
+        // issuer
+        const { iss } = claim
+        // validate issuer ?? 
+        return claim
     }
 }
 

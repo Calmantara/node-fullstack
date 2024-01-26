@@ -1,0 +1,22 @@
+{
+  "server": {
+    "name": "node-fullstack",
+    "port": "3000"
+  },
+  "postgres": {
+    "master": {
+      "host": "127.0.0.1",
+      "port": "15432",
+      "user": "postgres",
+      "password": "mysecretpassword",
+      "database": "cinema"
+    }
+  },
+  "session": {
+    "secret": "thisisverysupersecretkey",
+    "audience": ["node-fullstack.com"],
+    "issuer": ["node-fullstack.com"],
+    "accessExpires": 1,
+    "refreshExpires": 2
+  }
+}

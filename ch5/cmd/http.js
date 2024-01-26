@@ -41,10 +41,6 @@ async function prepare() {
   const middleware = new Middleware(cryptoService, userService)
   const userRouter = new UserRouter(app, middleware, userController)
 
-  // app.get("", (req, res) => {
-
-  // })
-
   // mount all 
   userRouter.mountV1()
   return { app, dbMaster }

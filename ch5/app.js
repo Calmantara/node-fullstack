@@ -27,5 +27,4 @@ program.
     action(() => {
         sequelize.serve()
     })
-
 program.parse()

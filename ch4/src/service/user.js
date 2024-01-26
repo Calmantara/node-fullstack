@@ -7,6 +7,7 @@ class UserService {
 
     async createUser(user) {
         try {
+            // membuat hash password
             await this.userRepo.createUser(user)
         } catch (error) {
             throw error

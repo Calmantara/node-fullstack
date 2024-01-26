@@ -94,6 +94,35 @@ class UserController {
             res.status(500).send(errs)
         }
     }
+
+    async userLogin(req, res) {
+        // get user payload 
+        // username and passwordk
+        const { username, password } = req.body
+        const user = new UserRequest(username, password)
+
+        // validate payload
+        try {
+            user.validateUsername()
+            user.validatePassword()
+        } catch (error) {
+            console.error(`error validating payload ${error.message}`)
+            const errs = [new ErrorResponse(error.message, ErrorMessage.ERROR_USER_CREATION)]
+            res.status(400).send(errs)
+        }
+        // check wether user exist or not
+
+        // do login logic
+        try {
+            const userData = await this.userService.userLogin(user)
+            const response = new SuccessResponse(SuccessMessage.USER_LOGGED_IN, userData)
+            res.status(200).send(response)
+        } catch (error) {
+            console.error(`error user login ${error.message}`)
+            const errs = [new ErrorResponse(error.message, ErrorMessage.ERROR_USER_LOGIN)]
+            res.status(500).send(errs)
+        }
+    }
 }
 
 module.exports = { UserController }

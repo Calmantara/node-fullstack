@@ -50,6 +50,8 @@ function expressGraceful(server, dbMaster) {
   return async () => {
     console.log("server is shutting down");
     server.close();
+
+    console.log("close database connection");
     await dbMaster.close()
   };
 }
